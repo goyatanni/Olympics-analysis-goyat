@@ -1,0 +1,23 @@
+import pandas as pd
+
+# Load datasets
+df = pd.read_csv('athlete_events.csv')
+region_df = pd.read_csv('noc_regions.csv')
+
+
+print("Columns in region_df before renaming:", region_df.columns)
+
+df = df[df['Season'] == 'Summer'].copy()
+
+region_df.rename(columns={'Region': 'region'}, inplace=True)
+
+df = df.merge(region_df, on='NOC', how='left')
+
+print("columns in df  after merging:", df.columns)
+
+df.drop_duplicates(inplace=True)
+
+df = pd.concat([df, pd.get_dummies(df['Medal'])], axis=1)
+
+def preprocess():
+    return df
